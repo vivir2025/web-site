@@ -58,15 +58,27 @@ import modeloImg from '../assets/modelo.png';
 
 <script>
 	import L from 'leaflet';
-	import 'leaflet.heat';
+
+	// Cargar leaflet.heat dinámicamente después de que Leaflet esté disponible
+	async function loadHeatLayer() {
+		if (!window.L || !window.L.heatLayer) {
+			const script = document.createElement('script');
+			script.src = 'https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js';
+			document.head.appendChild(script);
+			await new Promise(resolve => script.onload = resolve);
+		}
+	}
 
 	async function initMap() {
 		const mapElement = document.getElementById('impact-map');
 		const loader = document.getElementById('map-loader');
-		
+
 		if (!mapElement) return;
 
 		try {
+			// Cargar leaflet.heat antes de usarlo
+			await loadHeatLayer();
+
 			// 1. Fetch de datos usando .env (PUBLIC_ para que sea accesible en el cliente)
 			const apiUrl = import.meta.env.PUBLIC_API_URL;
 			const response = await fetch(apiUrl);
