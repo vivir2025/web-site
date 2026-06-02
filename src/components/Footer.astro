@@ -1,0 +1,335 @@
+---
+import { Image } from "astro:assets";
+import footerImg from "../assets/footer.png";
+---
+
+<footer class="footer">
+	<!-- La franja diagonal es la base de todo -->
+	<div class="footer-shape"></div>
+
+	<!-- Imagen decorativa recostada sobre la diagonal -->
+	<div class="footer-decoration">
+		<Image
+			src={footerImg}
+			alt="Fundación Decoración"
+			width={220}
+			format="webp"
+			quality="mid"
+		/>
+	</div>
+
+	<div class="footer-content-wrapper">
+		<div class="brand-info">
+			<h2 class="brand-name">
+				FUNDACIÓN <br />
+				<span>NACER PARA VIVIR</span>
+			</h2>
+			<p class="brand-tagline">
+				Organización comunitaria llegando a tu vida.
+			</p>
+
+			<div class="social-icons-minimal">
+				<a href="#" class="social-icon-white" aria-label="Facebook">
+					<svg viewBox="0 0 24 24" fill="currentColor"
+						><path
+							d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.791-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+						></path></svg
+					>
+				</a>
+				<a href="#" class="social-icon-white" aria-label="Instagram">
+					<svg viewBox="0 0 24 24" fill="currentColor"
+						><path
+							d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.074 1.17.054 1.802.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.425.359 1.057.416 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.054 1.17-.249 1.802-.415 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.425.164-1.057.359-2.227.416-1.266.057-1.646.07-4.85.07s-3.585-.015-4.85-.074c-1.17-.054-1.802-.249-2.227-.415-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.425-.359-1.057-.416-2.227-.057-1.266-.07-1.646-.07-4.85s.015-3.585.074-4.85c.054-1.17.249-1.802.415-2.227.217-.562.477-.96.896-1.382.42-.419.819-.679 1.381-.896.425-.164 1.057-.359 2.227-.416 1.266-.057 1.646-.07 4.85-.07zM12 5.837a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+						></path></svg
+					>
+				</a>
+				<a href="#" class="social-icon-white" aria-label="YouTube">
+					<svg viewBox="0 0 24 24" fill="currentColor"
+						><path
+							d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+						></path></svg
+					>
+				</a>
+			</div>
+		</div>
+
+		<div class="footer-bottom-copy">
+			<p>
+				Derechos reservados Fundación Nacer Para Vivir &copy; {
+					new Date().getFullYear()
+				}
+			</p>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		background-color: #f8faf9;
+		position: relative;
+		overflow: hidden;
+		min-height: 520px;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+	}
+
+	/* Línea decorativa que sigue la diagonal */
+	.footer::before {
+		content: "";
+		position: absolute;
+		top: -1px; /* Un pelín arriba para que se note */
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(255, 255, 255, 0.4); /* Línea blanca sutil */
+		clip-path: polygon(0 70%, 100% 0, 100% 2px, 0 calc(70% + 2px));
+		z-index: 2; /* Por encima del fondo pero bajo el contenido */
+	}
+
+	.footer-shape {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(135deg, #319b51 0%, #1a4428 100%);
+		/* Forma del usuario: 0 70% a 100% 0 */
+		clip-path: polygon(0 70%, 100% 0, 100% 100%, 0 100%);
+		z-index: 1;
+	}
+
+	.footer-content-wrapper {
+		position: relative;
+		z-index: 10;
+		color: white;
+		width: 100%;
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 0 3.5rem 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		text-align: right;
+	}
+
+	/* Imagen estática y de mayor tamaño */
+	.footer-decoration {
+		position: absolute;
+		left: 5%;
+		top: 1.5%; /* Ajuste fino para el nuevo tamaño */
+		z-index: 5;
+		filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.2));
+		pointer-events: none;
+		opacity: 1;
+	}
+
+	.footer-decoration img {
+		width: 290px; /* Tamaño más grande e imponente */
+		height: auto;
+		display: block;
+	}
+
+	/* Eliminamos el hover para que sea 100% estático */
+
+	.brand-info {
+		margin-bottom: 2rem;
+	}
+
+	.brand-name {
+		font-family: var(--font-headline);
+		font-size: 2.8rem;
+		line-height: 1;
+		font-weight: 800;
+		margin-bottom: 0.75rem;
+		text-transform: uppercase;
+		color: white !important;
+		letter-spacing: -0.02em;
+	}
+
+	.brand-name span {
+		display: block;
+		font-size: 0.85em;
+		font-weight: 900;
+	}
+
+	.brand-tagline {
+		font-size: 1.1rem;
+		opacity: 0.85;
+		color: white !important;
+		font-weight: 500;
+		max-width: 500px;
+	}
+
+	.social-icons-minimal {
+		display: flex;
+		gap: 1.25rem;
+		justify-content: flex-end;
+		margin-top: 1.5rem;
+	}
+
+	.social-icon-white {
+		color: white !important;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1.2px solid rgba(255, 255, 255, 0.3);
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.05);
+		text-decoration: none;
+	}
+
+	.social-icon-white svg {
+		width: 1.2rem !important;
+		height: 1.2rem !important;
+		fill: white !important;
+		display: block;
+	}
+
+	.social-icon-white:hover {
+		background: #ffffff;
+		transform: translateY(-8px);
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+		border-color: white;
+	}
+
+	.social-icon-white:hover svg {
+		fill: #1a4428 !important;
+	}
+
+	.footer-bottom-copy {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem 0 0.75rem; /* Ajuste para que quede pegado abajo */
+		margin-top: 2rem;
+		position: relative;
+	}
+
+	.footer-bottom-copy p {
+		font-size: 0.8rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.22em;
+		opacity: 0.65;
+		color: white !important;
+		margin-bottom: 0.75rem; /* Menos espacio para la línea */
+	}
+
+	/* Línea decorativa corta y centrada DEBAJO */
+	.footer-bottom-copy::after {
+		content: "";
+		width: 80px; /* Un pelín más corta para más elegancia */
+		height: 1.5px;
+		background: rgba(255, 255, 255, 0.2);
+		border-radius: 2px;
+	}
+
+	/* Tablet */
+	@media (max-width: 1024px) {
+		.footer {
+			min-height: 450px;
+		}
+		.footer-content-wrapper {
+			padding: 0 2.5rem 1.5rem;
+		}
+		.footer-decoration {
+			left: 2%;
+			top: 3%;
+		}
+		.footer-decoration img {
+			width: 240px;
+		}
+		.brand-name {
+			font-size: 2.4rem;
+		}
+		.brand-tagline {
+			font-size: 1rem;
+		}
+	}
+
+	/* Móvil */
+	@media (max-width: 768px) {
+		.footer {
+			min-height: 520px;
+		}
+		.footer-content-wrapper {
+			align-items: center;
+			text-align: center;
+			padding: 0 1.5rem 1.5rem;
+		}
+		.footer-decoration {
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+			top: 2%;
+		}
+		.footer-decoration img {
+			width: 180px;
+		}
+		.brand-name {
+			font-size: 1.75rem;
+			margin-bottom: 0.5rem;
+		}
+		.brand-name span {
+			font-size: 0.9em;
+		}
+		.brand-tagline {
+			font-size: 0.95rem;
+			max-width: 100%;
+			opacity: 0.9;
+			margin: 0.75rem auto 0;
+		}
+		.social-icons-minimal {
+			justify-content: center;
+			gap: 1rem;
+			margin-top: 1rem;
+		}
+		.social-icon-white {
+			width: 2.5rem;
+			height: 2.5rem;
+		}
+		.social-icon-white svg {
+			width: 1rem !important;
+			height: 1rem !important;
+		}
+		.footer-shape {
+			clip-path: polygon(0 50%, 100% 0, 100% 100%, 0 100%);
+		}
+		.footer-bottom-copy {
+			margin-top: 1rem;
+		}
+		.footer-bottom-copy p {
+			font-size: 0.7rem;
+		}
+	}
+
+	/* Ultra móvil */
+	@media (max-width: 480px) {
+		.footer {
+			min-height: 480px;
+		}
+		.footer-content-wrapper {
+			padding: 0 1rem 1rem;
+		}
+		.footer-decoration img {
+			width: 140px;
+		}
+		.brand-name {
+			font-size: 1.5rem;
+		}
+		.social-icons-minimal {
+			gap: 0.75rem;
+		}
+		.social-icon-white {
+			width: 2.25rem;
+			height: 2.25rem;
+		}
+	}
+</style>

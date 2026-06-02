@@ -1,0 +1,381 @@
+---
+---
+<section class="contacts-section" id="contacts">
+	<div class="container">
+		<div class="section-header">
+			<h2 class="title">NUESTRAS SEDES</h2>
+			<p class="subtitle">Visítanos en cualquiera de nuestras 3 sedes y conoce de cerca el trabajo que realizamos por la salud de nuestras comunidades.</p>
+		</div>
+
+		<div class="contacts-grid">
+			<!-- SEDE CAJIBÍO -->
+			<div class="contact-card">
+				<div class="card-icon">
+					<span class="material-symbols-outlined">location_on</span>
+				</div>
+				<h3 class="seat-name">CAJIBÍO</h3>
+
+				<div class="contact-info">
+					<div class="info-item location">
+						<span class="material-symbols-outlined">location_on</span>
+						<span class="info-text">Calle 5 Real # 4-35</span>
+					</div>
+
+					<a href="tel:3135267494" class="info-item phone">
+						<span class="material-symbols-outlined">phone</span>
+						<span class="info-text">313 526 7494</span>
+					</a>
+
+					<a href="mailto:ips@nacerparavivir.org" class="info-item email">
+						<span class="material-symbols-outlined">mail</span>
+						<span class="info-text">ips@nacerparavivir.org</span>
+					</a>
+				</div>
+
+				<div class="floating-blobs">
+					<div class="blob blue"></div>
+					<div class="blob green"></div>
+				</div>
+			</div>
+
+			<!-- SEDE PIENDAMO -->
+			<div class="contact-card">
+				<div class="card-icon">
+					<span class="material-symbols-outlined">location_on</span>
+				</div>
+				<h3 class="seat-name">PIENDAMO</h3>
+
+				<div class="contact-info">
+					<div class="info-item location">
+						<span class="material-symbols-outlined">location_on</span>
+						<span class="info-text">Carrera 15 n° 6-268B/ La Floresta</span>
+					</div>
+
+					<a href="tel:30449866612" class="info-item phone">
+						<span class="material-symbols-outlined">phone</span>
+						<span class="info-text">304 498 66612</span>
+					</a>
+
+					<a href="mailto:ips@nacerparavivir.org" class="info-item email">
+						<span class="material-symbols-outlined">mail</span>
+						<span class="info-text">ips@nacerparavivir.org</span>
+					</a>
+				</div>
+
+				<div class="floating-blobs">
+					<div class="blob blue"></div>
+					<div class="blob green"></div>
+				</div>
+			</div>
+
+			<!-- SEDE MORALES -->
+			<div class="contact-card">
+				<div class="card-icon">
+					<span class="material-symbols-outlined">location_on</span>
+				</div>
+				<h3 class="seat-name">MORALES</h3>
+
+				<div class="contact-info">
+					<div class="info-item location">
+						<span class="material-symbols-outlined">location_on</span>
+						<span class="info-text">Cra 1#4B-51 Sagrada familia</span>
+					</div>
+
+					<a href="tel:3175493927" class="info-item phone">
+						<span class="material-symbols-outlined">phone</span>
+						<span class="info-text">317 549 3927</span>
+					</a>
+
+					<a href="mailto:ips@nacerparavivir.org" class="info-item email">
+						<span class="material-symbols-outlined">mail</span>
+						<span class="info-text">ips@nacerparavivir.org</span>
+					</a>
+				</div>
+
+				<div class="floating-blobs">
+					<div class="blob blue"></div>
+					<div class="blob green"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.contacts-section {
+		background-color: var(--color-surface-container-low);
+		padding: var(--spacing-24) 0;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 4rem;
+	}
+
+	.title {
+		font-size: 2.5rem;
+		margin-bottom: 1rem;
+		color: var(--color-brand-dark);
+		letter-spacing: -0.04em;
+		font-weight: 900;
+	}
+
+	.section-header .subtitle {
+		color: var(--color-primary);
+		max-width: 50rem;
+		margin: 0 auto;
+		font-weight: 400;
+		font-size: 1.125rem;
+		line-height: 1.6;
+	}
+
+	.contacts-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2.5rem;
+	}
+
+	.contact-card {
+		background: #f3f4f6;
+		border-radius: 2.5rem;
+		padding: 3rem 2rem;
+		position: relative;
+		overflow: hidden;
+		border: 1px solid rgba(0, 0, 0, 0.05);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+	}
+
+	.contact-card:hover {
+		transform: translateY(-8px);
+		box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+	}
+
+	.contact-card.placeholder {
+		opacity: 0.7;
+		background: linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%);
+	}
+
+	.card-icon {
+		font-size: 3.5rem;
+		color: var(--color-primary);
+		margin-bottom: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.card-icon span {
+		font-size: 3.5rem;
+	}
+
+	.seat-name {
+		font-size: 1.8rem;
+		color: var(--color-brand-dark);
+		margin-bottom: 2rem;
+		text-transform: uppercase;
+		font-weight: 900;
+		letter-spacing: 0.05em;
+	}
+
+	.contact-info {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		width: 100%;
+		position: relative;
+		z-index: 2;
+	}
+
+	.info-item {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		color: #4b5563;
+		text-decoration: none;
+		transition: all 0.3s ease;
+		font-weight: 500;
+	}
+
+	.info-item.phone,
+	.info-item.email {
+		cursor: pointer;
+	}
+
+	.info-item.phone:hover,
+	.info-item.email:hover {
+		color: var(--color-primary);
+		transform: translateX(4px);
+	}
+
+	.info-item.location {
+		cursor: default;
+	}
+
+	.info-item span.material-symbols-outlined {
+		flex-shrink: 0;
+		font-size: 1.5rem;
+		color: var(--color-secondary);
+	}
+
+	.info-item.phone span.material-symbols-outlined {
+		color: var(--color-primary);
+	}
+
+	.info-item.email span.material-symbols-outlined {
+		color: var(--color-brand-dark);
+	}
+
+	.info-text {
+		font-size: 1rem;
+		line-height: 1.4;
+	}
+
+	.placeholder-text {
+		color: #999;
+		font-size: 1.1rem;
+		font-style: italic;
+		margin: 0;
+		font-weight: 500;
+	}
+
+	.floating-blobs {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.blob {
+		position: absolute;
+		width: 20rem;
+		height: 20rem;
+		filter: blur(80px);
+		opacity: 0.08;
+	}
+
+	.blue {
+		background: var(--color-secondary);
+		top: -10rem;
+		right: -10rem;
+	}
+
+	.green {
+		background: var(--color-primary);
+		bottom: -10rem;
+		left: -10rem;
+	}
+
+	/* RESPONSIVIDAD TABLET (1024px) */
+	@media (max-width: 1024px) {
+		.contacts-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 2rem;
+		}
+
+		.contact-card {
+			padding: 2.5rem 1.5rem;
+		}
+
+		.seat-name {
+			font-size: 1.5rem;
+		}
+
+		.card-icon {
+			font-size: 3rem;
+		}
+
+		.card-icon span {
+			font-size: 3rem;
+		}
+	}
+
+	/* RESPONSIVIDAD MÓVIL (768px) */
+	@media (max-width: 768px) {
+		.contacts-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.title {
+			font-size: 2rem;
+		}
+
+		.section-header .subtitle {
+			font-size: 1rem;
+		}
+
+		.contact-card {
+			padding: 2rem 1.5rem;
+			border-radius: 2rem;
+		}
+
+		.seat-name {
+			font-size: 1.3rem;
+			margin-bottom: 1.5rem;
+		}
+
+		.card-icon {
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+		}
+
+		.card-icon span {
+			font-size: 2.5rem;
+		}
+
+		.contact-info {
+			gap: 1.2rem;
+		}
+
+		.info-item span.material-symbols-outlined {
+			font-size: 1.25rem;
+		}
+
+		.contact-card:hover {
+			transform: translateY(-4px);
+		}
+	}
+
+	/* RESPONSIVIDAD ULTRA MÓVIL (480px) */
+	@media (max-width: 480px) {
+		.section-header {
+			margin-bottom: 2.5rem;
+		}
+
+		.title {
+			font-size: 1.75rem;
+			margin-bottom: 0.75rem;
+		}
+
+		.section-header .subtitle {
+			font-size: 0.95rem;
+		}
+
+		.contact-card {
+			padding: 1.5rem 1rem;
+		}
+
+		.seat-name {
+			font-size: 1.2rem;
+			margin-bottom: 1.25rem;
+		}
+
+		.card-icon {
+			font-size: 2rem;
+			margin-bottom: 0.75rem;
+		}
+
+		.card-icon span {
+			font-size: 2rem;
+		}
+
+		.info-text {
+			font-size: 0.9rem;
+		}
+	}
+</style>

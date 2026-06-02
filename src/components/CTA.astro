@@ -1,0 +1,106 @@
+---
+---
+<section class="cta-section">
+	<div class="container">
+		<div class="cta-card">
+			<div class="cta-content">
+				<h2 class="cta-title">¿Tenés dudas sobre nuestros planes?</h2>
+				<p class="cta-subtitle">Comunicate por WhatsApp y un asesor te ayudará a elegir la mejor opción. Sin vueltas, directo al punto.</p>
+				<button class="btn-cta-whatsapp">
+					<span class="material-symbols-outlined">chat</span>
+					Consultar planes
+				</button>
+			</div>
+			<div class="floating-blobs">
+				<div class="blob blue"></div>
+				<div class="blob green"></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.cta-section {
+		padding: var(--spacing-24) 0;
+		background: #fff;
+	}
+
+	.cta-card {
+		background: #f3f4f6; /* Gray background as Reference */
+		border-radius: 2.5rem;
+		padding: 5rem 2rem;
+		text-align: center;
+		position: relative;
+		overflow: hidden;
+		border: 1px solid rgba(0,0,0,0.05);
+	}
+
+	.cta-content {
+		position: relative;
+		z-index: 2;
+	}
+
+	.cta-title {
+		font-size: 3rem;
+		color: #111827;
+		margin-bottom: 1rem;
+		letter-spacing: -0.04em;
+	}
+
+	.cta-subtitle {
+		font-size: 1.125rem;
+		color: #4b5563;
+		margin-bottom: 3rem;
+		max-width: 36rem;
+		margin-inline: auto;
+	}
+
+	.btn-cta-whatsapp {
+		background: var(--color-primary); /* #25D366 */
+		color: white;
+		padding: 1rem 2.5rem;
+		border-radius: 1rem;
+		font-family: var(--font-headline);
+		font-weight: 800;
+		font-size: 1.25rem;
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin: 0 auto;
+		transition: all 0.3s ease;
+		box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
+	}
+
+	.btn-cta-whatsapp:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 15px 30px rgba(37, 211, 102, 0.3);
+	}
+
+	.floating-blobs {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+	}
+
+	.blob {
+		position: absolute;
+		width: 20rem;
+		height: 20rem;
+		filter: blur(80px);
+		opacity: 0.1;
+	}
+
+	.blue {
+		background: var(--color-secondary);
+		top: -10rem;
+		right: -10rem;
+	}
+
+	.green {
+		background: var(--color-primary);
+		bottom: -10rem;
+		left: -10rem;
+	}
+</style>

@@ -1,0 +1,329 @@
+---
+import { Image } from 'astro:assets';
+import modeloImg from '../assets/modelo.png';
+---
+
+<section class="model-section">
+	<div class="container">
+		<h2 class="section-title">NUESTRO MODELO DE ATENCIÓN</h2>
+		
+		<div class="dashboard-grid">
+			<!-- Columna Izquierda: El Modelo -->
+			<div class="dashboard-card model-card">
+				<div class="model-content">
+					<div class="model-icon-wrapper">
+						<Image src={modeloImg} alt="Modelo de Atención" class="model-img" width={250} height={250} format="webp" quality="mid" />
+					</div>
+					<div class="model-text">
+						<h3>Modelo Integral</h3>
+						<p>
+							Responde a la necesidad social de “rediseñar los actuales sistemas de salud 
+							para favorecer una mejor atención sanitaria a la población pero con los menores
+							costos”1, por lo que incluimos estos elementos para potencializar los recursos 
+							y mejorar la gestión de la salud poblacional.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Columna Derecha: Mapa de Calor -->
+			<div class="dashboard-card heatmap-card">
+				<div class="heatmap-header">
+					<h3>MAPA DE CALOR DE IMPACTO</h3>
+					<p class="heatmap-subtitle">Visualización en tiempo real de nuestra presencia y atención integral en territorio.</p>
+					<p class="privacy-notice">
+						<strong>Privacidad y Protección de Datos:</strong> En cumplimiento de la Ley 1581 de 2012 y la Ley 1751 de 2015, 
+						la Fundación Nacer Para Vivir protege la identidad de sus usuarios. Los datos geoespaciales presentados 
+						han sido sometidos a procesos de anonimización y agregación.
+					</p>
+				</div>
+				<div class="heatmap-container" id="impact-map">
+					<!-- El mapa se cargará aquí -->
+					<div class="heatmap-loading" id="map-loader">
+						<div class="pulse-ring"></div>
+						<div class="placeholder-content">
+							<span class="material-symbols-outlined">map</span>
+							<p>INTEGRANDO DATOS DE IMPACTO...</p>
+							<small>Sincronizando con fnpvi.nacerparavivir.org</small>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+	<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<script>
+	import L from 'leaflet';
+	// Importamos el plugin de calor vía CDN para evitar líos de bundling con Astro
+	import 'https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js';
+
+	async function initMap() {
+		const mapElement = document.getElementById('impact-map');
+		const loader = document.getElementById('map-loader');
+		
+		if (!mapElement) return;
+
+		try {
+			// 1. Fetch de datos usando .env (PUBLIC_ para que sea accesible en el cliente)
+			const apiUrl = import.meta.env.PUBLIC_API_URL;
+			const response = await fetch(apiUrl);
+			const result = await response.json();
+			const points = result.data || result;
+			
+			if (loader) loader.style.display = 'none';
+
+			// 2. Inicializar mapa
+			const map = L.map('impact-map', {
+				zoomControl: false,
+				attributionControl: false
+			}).setView([2.6, -76.6], 10);
+
+			L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+				maxZoom: 19
+			}).addTo(map);
+
+			// 3. Crear el Mapa de Calor (Las "manchas")
+			if (points && points.length > 0) {
+				const bounds = L.latLngBounds([]);
+				
+				// Formato para leaflet.heat: [lat, lng, intensidad]
+				const heatPoints = (Array.isArray(points) ? points : []).map(item => {
+					if (item && item.lat && item.lng) {
+						bounds.extend([item.lat, item.lng]);
+						const intensity = (item.impacto_visitas || 1) / 10;
+						return [item.lat, item.lng, Math.min(intensity, 1)];
+					}
+					return null;
+				}).filter(validPoint => validPoint !== null);
+
+				// Configuración de las "manchas"
+				// @ts-ignore - Leaflet.heat se añade dinámicamente
+				L.heatLayer(heatPoints, {
+					radius: 25,
+					blur: 15,
+					maxZoom: 14,
+					gradient: {
+						0.4: '#dcfce7', // Verde muy claro
+						0.6: '#25D366', // Verde marca
+						0.8: '#16a34a', // Verde medio
+						1.0: '#14532d'  // Verde oscuro
+					}
+				}).addTo(map);
+
+				if (bounds.isValid()) {
+					map.fitBounds(bounds, { padding: [30, 30] });
+				}
+			}
+
+			L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+		} catch (error) {
+			console.error('Error cargando el mapa:', error);
+		}
+	}
+
+	// Ejecutar cuando el DOM esté listo
+	document.addEventListener('astro:page-load', initMap);
+	// Fallback para carga normal
+	initMap();
+</script>
+
+<style>
+	.model-section {
+		padding: var(--spacing-16) 0;
+		background: #f8faf9;
+		position: relative;
+		border-top: 1px solid rgba(0, 0, 0, 0.08); /* Rayita gris sutil */
+	}
+
+	.section-title {
+		text-align: center;
+		margin-bottom: var(--spacing-10);
+		font-size: 2.2rem;
+		color: var(--color-brand-dark);
+		font-weight: 900;
+		letter-spacing: -0.02em;
+	}
+
+	.dashboard-grid {
+		display: flex;
+		gap: 1.5rem;
+		align-items: stretch;
+	}
+
+	.dashboard-card {
+		background: #fff;
+		border-radius: 2rem;
+		padding: 2rem;
+		box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.06);
+		transition: all 0.3s ease;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.model-card {
+		flex: 1;
+		background: rgba(37, 211, 102, 0.06); 
+		border-left: 6px solid var(--color-primary);
+		justify-content: center;
+	}
+
+	.heatmap-card {
+		flex: 1.25;
+	}
+
+	.model-content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		align-items: center;
+		text-align: center;
+	}
+
+	.model-icon-wrapper {
+		width: 10rem;
+		height: 10rem;
+		background: #fff;
+		border-radius: 2.5rem;
+		padding: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+	}
+
+	.model-img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.model-text h3 {
+		font-size: 1.6rem;
+		color: var(--color-brand-dark);
+		margin-bottom: 0.75rem;
+	}
+
+	.model-text p {
+		color: var(--color-secondary);
+		line-height: 1.6;
+		font-size: 1rem;
+		max-width: 400px;
+		text-align: justify;
+	}
+
+	.heatmap-header h3 {
+		font-size: 1.3rem;
+		color: var(--color-brand-dark);
+		margin-bottom: 0.25rem;
+		letter-spacing: 0.05em;
+	}
+
+	.heatmap-subtitle {
+		color: var(--color-primary-dark);
+		font-weight: 600;
+		margin-bottom: 0.5rem; /* Ajustado para el notice */
+		font-size: 0.9rem;
+	}
+
+	.privacy-notice {
+		font-size: 0.75rem;
+		color: var(--color-secondary);
+		line-height: 1.4;
+		margin-bottom: 1.5rem;
+		opacity: 0.8;
+	}
+
+	.privacy-notice strong {
+		color: var(--color-brand-dark);
+	}
+
+	.heatmap-container {
+		flex: 1;
+		min-height: 350px;
+		background: #edf2ef;
+		border-radius: 1.5rem;
+		position: relative;
+		overflow: hidden;
+		border: 1px solid rgba(0, 0, 0, 0.05);
+	}
+
+	.heatmap-loading {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #f8faf9;
+		z-index: 1000;
+	}
+
+	.placeholder-content {
+		text-align: center;
+		z-index: 2;
+	}
+
+	.placeholder-content span {
+		font-size: 3.5rem;
+		color: var(--color-primary);
+		margin-bottom: 1rem;
+		display: block;
+		animation: bounce 2s infinite;
+	}
+
+	.placeholder-content p {
+		font-size: 1rem;
+		font-weight: 800;
+		color: var(--color-brand-dark);
+	}
+
+	.placeholder-content small {
+		color: var(--color-secondary);
+		font-family: monospace;
+		font-size: 0.8rem;
+	}
+
+	.pulse-ring {
+		position: absolute;
+		width: 80px;
+		height: 80px;
+		background: rgba(37, 211, 102, 0.2);
+		border-radius: 50%;
+		animation: pulse 2s infinite;
+	}
+
+	@keyframes pulse {
+		0% { transform: scale(0.8); opacity: 0.6; }
+		100% { transform: scale(3); opacity: 0; }
+	}
+
+	@keyframes bounce {
+		0%, 100% { transform: translateY(0); }
+		50% { transform: translateY(-10px); }
+	}
+
+	@media (max-width: 1024px) {
+		.dashboard-grid {
+			flex-direction: column;
+		}
+		.heatmap-container {
+			min-height: 300px;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.dashboard-card {
+			padding: 1.5rem;
+		}
+		.section-title {
+			font-size: 1.8rem;
+		}
+	}
+</style>

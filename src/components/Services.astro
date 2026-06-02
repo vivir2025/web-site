@@ -1,0 +1,200 @@
+---
+import { Image } from 'astro:assets';
+import riesgoImg from '../assets/riesgo.png';
+import primariaImg from '../assets/primaria.png';
+import emporImg from '../assets/empor.png';
+import alimentariaImg from '../assets/alimentaria.png';
+---
+<section class="services-section">
+	<div class="container">
+		<div class="section-header">
+			<h2 class="title">NUESTROS PROGRAMAS DE ATENCIÓN</h2>
+			<p class="subtitle">La Fundación Nacer para Vivir se compromete a trabajar por mejorar la salud de las comunidades por medio de la implementación de un modelo integral.</p>
+		</div>
+		<div class="services-grid">
+			<div class="service-card">
+				<div class="icon-wrapper">
+					<Image src={riesgoImg} alt="Riesgo Cardiovascular" class="card-img" width={240} format="webp" quality="mid" />
+				</div>
+				<div class="card-body">
+					<h3>Gestion Cardiorenal</h3>
+					<p>La prevención de la enfermedad, el mejoramiento de las condiciones de salud basadas en el autocuidado.</p>
+					<a href="#" class="learn-more">
+						Saber más <span class="material-symbols-outlined">arrow_forward</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="service-card">
+				<div class="icon-wrapper">
+					<Image src={primariaImg} alt="Atención Primaria" class="card-img" width={240} format="webp" quality="mid" />
+				</div>
+				<div class="card-body">
+					<h3>Atención Primaria en Salud</h3>
+					<p>La Atención Primaria de Salud (APS) es considerada como uno de los componentes fundamentales de un sistema de salud efectivo.</p>
+					<a href="#" class="learn-more">
+						Saber más <span class="material-symbols-outlined">arrow_forward</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="service-card">
+				<div class="icon-wrapper">
+					<Image src={emporImg} alt="Empoderamiento Comunitario" class="card-img" width={240} format="webp" quality="mid" />
+				</div>
+				<div class="card-body">
+					<h3>Empoderamiento Comunitario</h3>
+					<p>teniendo en cuenta nuestro origen y nuestro modelo de atención la gestión comunitaria es la base de operación de nuestro programa.</p>
+					<a href="#" class="learn-more">
+						Saber más <span class="material-symbols-outlined">arrow_forward</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="service-card">
+				<div class="icon-wrapper">
+					<Image src={alimentariaImg} alt="Seguridad Alimentaria" class="card-img" width={240} format="webp" quality="mid" />
+				</div>
+				<div class="card-body">
+					<h3>Seguirdad Alimentaria</h3>
+					<p>Conocedores de que una alimentación suficiente y nutritiva es condición indispensable para una vida sana.</p>
+					<a href="#" class="learn-more">
+						Saber más <span class="material-symbols-outlined">arrow_forward</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.services-section {
+		background-color: var(--color-surface-container-low);
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 4rem;
+	}
+
+	.title {
+		font-size: 2.5rem;
+		margin-bottom: 1rem;
+		color: var(--color-brand-dark);
+	}
+
+	.section-header .subtitle {
+		color: var(--color-primary);
+		max-width: 40rem;
+		margin: 0 auto;
+		font-weight: 400;
+	}
+
+	.services-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.5rem; /* Reducido de 2.5rem */
+	}
+
+	.service-card {
+		background: var(--color-surface-container-lowest);
+		padding: 1.8rem; /* Reducido de 2.5rem */
+		border-radius: 1.5rem; /* Reducido de 2rem */
+		transition: all 0.3s ease;
+		display: flex;
+		flex-direction: row;
+		gap: 1.8rem; /* Reducido de 2.5rem */
+		align-items: center;
+		border: 1px solid rgba(0,0,0,0.05);
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+	}
+
+	.service-card:hover {
+		box-shadow: 0 15px 20px -5px rgba(0, 110, 42, 0.08); /* Sombra más sutil */
+		transform: translateY(-3px); /* Menos movimiento */
+	}
+
+	.icon-wrapper {
+		width: 5.5rem;
+		height: 5.5rem;
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 1.25rem;
+		overflow: hidden; /* Para que la imagen no se salga */
+	}
+
+	.card-img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	/* Eliminamos el efecto hover de escala en el icono/imagen */
+	.service-card:hover .icon-wrapper {
+		transform: none;
+		background: transparent;
+	}
+
+	.card-body {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	h3 {
+		font-size: 1.3rem; /* Reducido de 1.5rem */
+		margin-bottom: 0.5rem;
+		text-transform: uppercase;
+		color: var(--color-brand-dark);
+		font-weight: 900;
+		letter-spacing: -0.02em;
+	}
+
+	.service-card p {
+		color: var(--color-primary);
+		margin-bottom: 1.25rem;
+		font-size: 0.95rem; /* Reducido de 1.05rem */
+		line-height: 1.5;
+		font-weight: 500;
+	}
+
+	.learn-more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		background: #2e8a4e;
+		color: #fff;
+		padding: 0.6rem 1.4rem; /* Reducido */
+		border-radius: 2rem;
+		font-weight: 700;
+		text-decoration: none;
+		font-family: var(--font-headline);
+		font-size: 0.85rem; /* Reducido de 0.95rem */
+		transition: all 0.3s ease;
+		align-self: flex-end;
+		box-shadow: 0 4px 12px rgba(46, 138, 78, 0.2);
+	}
+
+	.learn-more span {
+		font-size: 1.1rem;
+	}
+
+	.learn-more:hover {
+		transform: translateX(5px);
+		background: #1e5a32;
+		box-shadow: 0 6px 15px rgba(46, 138, 78, 0.3);
+	}
+
+	@media (max-width: 1024px) {
+		.services-grid { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 768px) {
+		.service-card { flex-direction: column; text-align: center; gap: 1.25rem; padding: 1.5rem; }
+		.learn-more { align-self: center; }
+		.icon-wrapper { margin: 0 auto; }
+	}
+</style>

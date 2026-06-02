@@ -1,0 +1,92 @@
+---
+---
+<section class="faq-section">
+	<div class="container-small">
+		<h2 class="title">PREGUNTAS FRECUENTES</h2>
+		<div class="faq-list">
+			<div class="faq-item">
+				<div class="faq-question">
+					<h4>¿Cuánto tiempo toma la integración?</h4>
+					<span class="material-symbols-outlined icon">add</span>
+				</div>
+			</div>
+
+			<div class="faq-item open">
+				<div class="faq-question">
+					<h4>¿Tienen ambiente de pruebas (Sandbox)?</h4>
+					<span class="material-symbols-outlined icon">remove</span>
+				</div>
+				<div class="faq-answer">
+					<p>Sí, ofrecemos un ambiente de pruebas ilimitado y gratuito donde puedes simular todas las respuestas de la DIAN antes de pasar a producción.</p>
+				</div>
+			</div>
+
+			<div class="faq-item">
+				<div class="faq-question">
+					<h4>¿Soportan todos los tipos de documentos?</h4>
+					<span class="material-symbols-outlined icon">add</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.faq-section {
+		background: var(--color-surface-container-low);
+	}
+
+	.container-small {
+		max-width: 48rem;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	.title {
+		text-align: center;
+		font-size: 2.5rem;
+		margin-bottom: 3rem;
+	}
+
+	.faq-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.faq-item {
+		background: var(--color-surface-container-lowest);
+		border-radius: 1.25rem;
+		overflow: hidden;
+		transition: all 0.3s ease;
+	}
+
+	.faq-question {
+		padding: 1.5rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		cursor: pointer;
+	}
+
+	.faq-question h4 {
+		font-size: 1.125rem;
+		text-transform: none;
+		margin: 0;
+	}
+
+	.icon {
+		color: var(--color-primary);
+		transition: transform 0.3s ease;
+	}
+
+	.faq-answer {
+		padding: 0 1.5rem 1.5rem;
+		color: var(--color-secondary);
+		line-height: 1.6;
+	}
+
+	.faq-item.open {
+		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+	}
+</style>

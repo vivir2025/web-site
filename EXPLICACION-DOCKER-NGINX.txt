@@ -1,0 +1,598 @@
+================================================================================
+   EXPLICACION COMPLETA: DOCKER + NGINX PARA EL PROYECTO VISIBLE-VIRGO
+   Proyecto: Landing page de Factus API (Facturacion Electronica)
+   Tecnologia base: Astro (sitio estatico)
+================================================================================
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  PARTE 1: QUE ES CADA HERRAMIENTA Y PARA QUE SIRVE                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+────────────────────────────────────────────────────────────────────────────────
+ASTRO (El generador de paginas)
+────────────────────────────────────────────────────────────────────────────────
+
+Astro es el framework con el que fue hecho el sitio web.
+Su trabajo es tomar los archivos .astro (que son como plantillas) y convertirlos
+en archivos HTML, CSS y JavaScript puro que cualquier navegador puede entender.
+
+Cuando ejecutas: npm run build
+
+Astro hace lo siguiente:
+  - Lee todos los archivos de la carpeta src/
+  - Convierte cada componente .astro en HTML real
+  - Junta y optimiza los estilos CSS
+  - Genera una carpeta llamada "dist/" con el resultado final
+
+La carpeta dist/ queda asi:
+  dist/
+  ├── index.html          <-- La pagina principal del sitio
+  ├── favicon.ico         <-- El iconito del navegador
+  ├── favicon.svg
+  └── _astro/
+      ├── index.BkXv3aKP.css   <-- Estilos (el nombre con letras raras es un hash)
+      └── ...otros archivos JS y CSS
+
+IMPORTANTE: Una vez generado el dist/, Astro ya no es necesario.
+El sitio es solo HTML, CSS e imagenes. Cualquier servidor web puede servirlo.
+
+────────────────────────────────────────────────────────────────────────────────
+DOCKER (El contenedor / caja de transporte)
+────────────────────────────────────────────────────────────────────────────────
+
+Piensa en Docker como una "caja hermetica" donde metes tu aplicacion.
+
+Sin Docker tienes este problema:
+  "En mi maquina funciona perfecto, pero en el servidor del cliente no funciona"
+  Esto pasa porque las maquinas tienen diferentes versiones de Node, de librerias,
+  de sistema operativo, etc.
+
+Con Docker:
+  - Creas una caja que contiene TODO lo necesario (Node, tu codigo, Nginx, etc.)
+  - Esa caja funciona IGUAL en cualquier maquina que tenga Docker instalado
+  - Da igual si es tu laptop, un servidor en Colombia o un servidor en Alemania
+
+Terminos clave de Docker:
+
+  IMAGEN:    Es la "receta" o el "molde". Define como construir la caja.
+             La imagen se construye una vez siguiendo el Dockerfile.
+
+  CONTENEDOR: Es la "caja en funcionamiento". Es una instancia de una imagen.
+              Puede haber multiples contenedores del mismo molde.
+
+  Dockerfile: El archivo con las instrucciones para crear la imagen.
+              Es como una receta de cocina paso a paso.
+
+  docker-compose.yml: Cuando tienes varios contenedores, este archivo los
+                      coordina a todos juntos.
+
+────────────────────────────────────────────────────────────────────────────────
+NGINX (El servidor web / el mesero)
+────────────────────────────────────────────────────────────────────────────────
+
+Nginx (se pronuncia "engine-ex") es un servidor web.
+
+Su trabajo es MUY simple pero MUY importante:
+  1. Escucha en un puerto (en nuestro caso el puerto 80)
+  2. Cuando llega una peticion (alguien que quiere ver el sitio)
+  3. Busca el archivo que piden
+  4. Responde con ese archivo
+
+La analogia del restaurante:
+
+  Cliente (navegador)  =  Una persona que entra al restaurante
+  Peticion HTTP        =  El pedido que hace ("quiero la imagen del logo")
+  Nginx                =  El mesero que recibe el pedido
+  Carpeta dist/        =  La cocina con los platos ya preparados
+  Respuesta HTTP       =  El plato que el mesero lleva a la mesa
+
+Sin Nginx, los archivos HTML y CSS que genera Astro son solo archivos en disco.
+Nadie en internet los puede pedir porque no hay nadie "escuchando" las peticiones.
+Nginx es el que "escucha" y "entrega".
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  PARTE 2: LOS ARCHIVOS QUE SE CREARON Y QUE HACE CADA UNO                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Se crearon 4 archivos nuevos en el proyecto:
+
+  1. Dockerfile
+  2. docker-compose.yml
+  3. nginx.conf
+  4. .dockerignore
+
+Vamos uno por uno:
+
+────────────────────────────────────────────────────────────────────────────────
+ARCHIVO 1: Dockerfile
+────────────────────────────────────────────────────────────────────────────────
+
+Ubicacion: /visible-virgo/Dockerfile
+
+Este archivo tiene DOS etapas (multi-stage build).
+La razon de dos etapas es hacer la imagen final lo mas pequena posible.
+
+--- ETAPA 1: El constructor (builder) ---
+
+  FROM node:22-alpine AS builder
+
+  Esto dice: "Usa una version de Linux super liviana (Alpine) que ya viene
+  con Node.js version 22 instalado. Llama a esta etapa 'builder'."
+
+  WORKDIR /app
+
+  Crea una carpeta /app dentro del contenedor y se mueve ahi.
+  Es como hacer: cd /app pero dentro de la caja de Docker.
+
+  COPY package.json package-lock.json ./
+
+  Copia SOLO los archivos de dependencias primero (no el codigo todavia).
+  Por que? Porque Docker guarda en cache cada paso. Si el codigo cambia pero
+  las dependencias no, no necesita reinstalar todo desde cero. Ahorra tiempo.
+
+  RUN npm ci
+
+  Instala todas las librerias del proyecto. El "ci" (clean install) es mas
+  estricto que "npm install" porque usa el package-lock.json exacto,
+  garantizando las mismas versiones siempre.
+
+  COPY . .
+
+  Ahora si copia TODO el resto del proyecto dentro del contenedor.
+
+  RUN npm run build
+
+  Ejecuta el build de Astro. Esto genera la carpeta dist/ dentro del contenedor
+  en la ruta /app/dist/
+
+--- ETAPA 2: El servidor (la imagen final) ---
+
+  FROM nginx:alpine
+
+  Empieza de cero con una imagen limpia de Nginx. Esta imagen solo tiene Nginx,
+  nada de Node, nada del codigo fuente. Muy liviana (~25MB).
+
+  COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+  Copia nuestra configuracion personalizada de Nginx al lugar donde Nginx
+  la busca automaticamente.
+
+  COPY --from=builder /app/dist /usr/share/nginx/html
+
+  Esta es la linea MAS IMPORTANTE del Dockerfile.
+  "Copia el resultado del build (de la etapa 'builder') y pegalo en la
+  carpeta donde Nginx sirve archivos por defecto."
+
+  Resultado: La imagen final tiene Nginx + el sitio listo. Sin Node. Sin codigo fuente.
+
+  EXPOSE 80
+
+  Le dice a Docker: "Este contenedor usara el puerto 80." Es informativo,
+  el puerto real se mapea en el docker-compose.yml.
+
+  CMD ["nginx", "-g", "daemon off;"]
+
+  Inicia Nginx cuando el contenedor arranca.
+  El "daemon off" hace que Nginx corra en primer plano (necesario para Docker,
+  que necesita que el proceso principal no se vaya al fondo).
+
+────────────────────────────────────────────────────────────────────────────────
+ARCHIVO 2: nginx.conf
+────────────────────────────────────────────────────────────────────────────────
+
+Ubicacion: /visible-virgo/nginx.conf
+
+Este archivo le dice a Nginx exactamente como comportarse.
+
+  server {
+      listen 80;
+
+  Nginx escucha en el puerto 80. El puerto 80 es el puerto estandar de HTTP.
+  Cuando escribes http://localhost sin poner puerto, el navegador automaticamente
+  usa el puerto 80.
+
+      server_name localhost;
+
+  El nombre del servidor. En produccion esto seria tu dominio: miempresa.com
+
+      root /usr/share/nginx/html;
+      index index.html;
+
+  Le dice a Nginx donde estan los archivos del sitio y cual es el archivo
+  principal. /usr/share/nginx/html es donde copiamos el dist/ en el Dockerfile.
+
+      gzip on;
+      gzip_types text/plain text/css application/javascript ...;
+      gzip_min_length 1024;
+
+  Compresion gzip: antes de enviar un archivo CSS o JS al navegador,
+  Nginx lo comprime. El navegador lo recibe comprimido y lo descomprime.
+  Resultado: archivos que pesan 100KB llegan como 30KB. Sitio mas rapido.
+
+      location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?)$ {
+          expires 1y;
+          add_header Cache-Control "public, immutable";
+      }
+
+  Para archivos estaticos (imagenes, CSS, JS):
+  Les pone una fecha de expiracion de 1 año.
+  Esto le dice al navegador: "Guarda este archivo en tu memoria local.
+  Si alguien vuelve al sitio, no lo pidas de nuevo al servidor, usalo del cache."
+  Resultado: el sitio carga instantaneo para visitantes repetidos.
+
+  Por que es seguro poner 1 año? Porque Astro le pone un hash al nombre del archivo.
+  Ejemplo: index.BkXv3aKP.css
+  Si el CSS cambia, el hash cambia, el nombre es diferente, el navegador lo pide nuevo.
+
+      location / {
+          try_files $uri $uri/ /index.html;
+      }
+
+  Para cualquier URL que pidan:
+  1. Intenta encontrar el archivo exacto ($uri)
+  2. Si no existe, intenta como carpeta ($uri/)
+  3. Si tampoco, devuelve index.html
+
+  Esto es necesario para que rutas como /servicios o /contacto funcionen
+  si en algun momento se agregan paginas adicionales en Astro.
+
+────────────────────────────────────────────────────────────────────────────────
+ARCHIVO 3: docker-compose.yml
+────────────────────────────────────────────────────────────────────────────────
+
+Ubicacion: /visible-virgo/docker-compose.yml
+
+services:
+  web:
+
+Define un servicio llamado "web". En proyectos mas grandes habria varios:
+web, base-de-datos, api, cache, etc.
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+Dice: "Construye la imagen usando el Dockerfile que esta en esta misma carpeta"
+
+    container_name: visible-virgo-web
+
+El nombre del contenedor cuando corre. Util para identificarlo con:
+  docker ps
+  docker logs visible-virgo-web
+  docker stop visible-virgo-web
+
+    ports:
+      - "80:80"
+
+ESTA ES LA PARTE MAS IMPORTANTE DEL docker-compose.yml
+
+Formato: "PUERTO_DE_TU_MAQUINA : PUERTO_DENTRO_DEL_CONTENEDOR"
+
+Significa: "Cuando alguien en mi maquina haga una peticion al puerto 80,
+reenviarla al puerto 80 del contenedor donde Nginx esta escuchando."
+
+Es como un tunel o un puente entre tu maquina y la caja de Docker.
+
+    restart: unless-stopped
+
+Si el contenedor se cae por algun error, se reinicia solo.
+La unica excepcion es si tu lo detuviste manualmente con docker compose down.
+
+────────────────────────────────────────────────────────────────────────────────
+ARCHIVO 4: .dockerignore
+────────────────────────────────────────────────────────────────────────────────
+
+Ubicacion: /visible-virgo/.dockerignore
+
+Funciona exactamente igual que el .gitignore pero para Docker.
+Cuando Docker copia los archivos del proyecto (COPY . .) en el Dockerfile,
+ignora todo lo que este en este archivo.
+
+Se ignora:
+  node_modules/  -> Son miles de archivos (puede ser 200MB+). Docker los instala
+                    desde cero con npm ci, no necesita los locales.
+  dist/          -> Docker hace su propio build, no usa el dist/ local.
+  .git/          -> El historial de git no es necesario en el contenedor.
+  .env           -> Variables de entorno sensibles no deben ir en la imagen.
+
+Beneficio: El contexto de build es mas pequeno, el proceso es mas rapido.
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  PARTE 3: EJEMPLO DETALLADO - QUE PASA CUANDO UN CLIENTE PIDE UNA IMAGEN   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Escenario: Un usuario abre Chrome y escribe http://localhost en la barra de direcciones.
+El sitio carga, y tiene una imagen del logo de la fundacion.
+
+Vamos paso a paso con TODOS los detalles:
+
+PASO 1 - El navegador pide la pagina principal
+─────────────────────────────────────────────────
+
+  El usuario escribe: http://localhost
+  Chrome traduce esto internamente a:  http://localhost:80/
+
+  Chrome envia esta peticion HTTP:
+  ┌─────────────────────────────────────────────────────────┐
+  │  GET / HTTP/1.1                                         │
+  │  Host: localhost                                        │
+  │  User-Agent: Chrome/124                                 │
+  └─────────────────────────────────────────────────────────┘
+
+  "GET /" significa: "Dame el archivo de la ruta raiz (/)"
+
+PASO 2 - Docker recibe la peticion en el puerto 80
+───────────────────────────────────────────────────────
+
+  Docker tiene configurado en el docker-compose.yml:
+    ports: "80:80"
+
+  Entonces Docker recibe la peticion y la reenvía al puerto 80 del contenedor.
+  Es como un guardia de edificio que recibe visitas y las manda al apartamento correcto.
+
+PASO 3 - Nginx recibe la peticion
+────────────────────────────────────
+
+  Nginx esta escuchando en el puerto 80 del contenedor.
+  Recibe la peticion y lee su configuracion (nginx.conf) para saber que hacer.
+
+  Nginx mira la URL: /
+  Busca en: /usr/share/nginx/html/  (que es donde esta el dist/)
+  Encuentra: /usr/share/nginx/html/index.html
+
+PASO 4 - Nginx responde con el HTML
+──────────────────────────────────────
+
+  Nginx lee el archivo index.html y lo envia de vuelta al navegador.
+
+  La respuesta HTTP se ve asi:
+  ┌─────────────────────────────────────────────────────────┐
+  │  HTTP/1.1 200 OK                                        │
+  │  Content-Type: text/html                               │
+  │  Content-Encoding: gzip                                 │
+  │  ...                                                    │
+  │                                                         │
+  │  <!DOCTYPE html>                                        │
+  │  <html>                                                 │
+  │    <head>                                               │
+  │      <link rel="stylesheet" href="/_astro/index.Bk.css">│
+  │    </head>                                              │
+  │    <body>                                               │
+  │      <img src="/assets/logo.png">                       │
+  │    </body>                                              │
+  │  </html>                                                │
+  └─────────────────────────────────────────────────────────┘
+
+PASO 5 - El navegador lee el HTML y pide los recursos adicionales
+───────────────────────────────────────────────────────────────────
+
+  Chrome lee el HTML y ve que necesita mas archivos:
+  - Un archivo CSS:   /_astro/index.BkXv3aKP.css
+  - Una imagen:       /assets/logo.png
+
+  Para CADA uno, hace una peticion separada a Nginx:
+
+  Peticion por el CSS:
+  ┌─────────────────────────────────────────────────────────┐
+  │  GET /_astro/index.BkXv3aKP.css HTTP/1.1               │
+  │  Host: localhost                                        │
+  └─────────────────────────────────────────────────────────┘
+
+  Peticion por la imagen:
+  ┌─────────────────────────────────────────────────────────┐
+  │  GET /assets/logo.png HTTP/1.1                          │
+  │  Host: localhost                                        │
+  └─────────────────────────────────────────────────────────┘
+
+PASO 6 - Nginx responde a la peticion de la IMAGEN
+─────────────────────────────────────────────────────
+
+  Nginx recibe: GET /assets/logo.png
+
+  Nginx mira su configuracion y ve que .png coincide con esta regla:
+    location ~* \.(js|css|png|jpg...)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+  Entonces Nginx:
+  1. Busca el archivo en /usr/share/nginx/html/assets/logo.png
+  2. Lo encuentra (esta ahi porque el Dockerfile lo copio del dist/)
+  3. Lo envia con cabeceras especiales de cache:
+
+  Respuesta de Nginx:
+  ┌─────────────────────────────────────────────────────────┐
+  │  HTTP/1.1 200 OK                                        │
+  │  Content-Type: image/png                               │
+  │  Cache-Control: public, immutable                       │
+  │  Expires: [fecha en 1 año]                              │
+  │                                                         │
+  │  [bytes de la imagen PNG...]                            │
+  └─────────────────────────────────────────────────────────┘
+
+  El numero de puerto aqui es 80, NO 3000.
+  El puerto 3000 lo usa "astro dev" en desarrollo local.
+  Nginx usa el puerto 80 que es el estandar de HTTP.
+
+PASO 7 - El navegador guarda la imagen en cache
+──────────────────────────────────────────────────
+
+  Chrome ve el header: Cache-Control: public, immutable
+  Guarda la imagen en su cache local.
+
+  Si el usuario navega a otra pagina y vuelve:
+  - Chrome NO le pide la imagen a Nginx otra vez
+  - La saca de su propio cache local
+  - Resultado: carga instantanea, cero trafico de red para esa imagen
+
+PASO 8 - El sitio queda completamente cargado
+──────────────────────────────────────────────
+
+  El usuario ve el sitio completo con:
+  - El HTML (index.html) servido por Nginx
+  - Los estilos CSS servidos por Nginx
+  - Las imagenes servidas por Nginx
+  - Todo desde la carpeta dist/ que Astro genero durante el build
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  PARTE 4: DIAGRAMA VISUAL DEL FLUJO COMPLETO                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+  Tu maquina (host)              Contenedor Docker
+  ─────────────────              ──────────────────────────────────────────
+                                 │                                        │
+  Chrome                         │    Nginx                               │
+    │                            │      │                                 │
+    │  peticion: GET /           │      │                                 │
+    │  al puerto 80              │      │                                 │
+    ├──────────────────────────► │ 80 ──► lee nginx.conf                  │
+    │                            │      │                                 │
+    │                            │      ├─► busca /usr/share/nginx/html/  │
+    │                            │      │      └── index.html  ✓          │
+    │                            │      │                                 │
+    │                            │      │   lee el archivo                │
+    │                            │      │   lo comprime (gzip)            │
+    │                            │      │                                 │
+    │  respuesta: 200 OK         │      │                                 │
+    │  con el HTML               │ 80 ◄─┤ responde                        │
+    ◄───────────────────────────── ─    │                                 │
+    │                            │      │                                 │
+    │  nueva peticion:           │      │                                 │
+    │  GET /assets/logo.png      │      │                                 │
+    ├──────────────────────────► │ 80 ──► busca /usr/share/nginx/html/    │
+    │                            │      │      assets/logo.png  ✓         │
+    │                            │      │                                 │
+    │                            │      │   agrega headers de cache       │
+    │                            │      │   (1 año, immutable)            │
+    │                            │      │                                 │
+    │  respuesta: 200 OK         │      │                                 │
+    │  imagen + headers cache    │ 80 ◄─┤ responde                        │
+    ◄──────────────────────────── ─    │                                 │
+    │                            │      │                                 │
+    Chrome guarda la imagen      │                                        │
+    en cache local               │                                        │
+                                 └────────────────────────────────────────┘
+
+  Mapeado de puertos:
+  ──────────────────────────────────────────────────────
+  Tu maquina: puerto 80  ◄──TUNEL──►  Contenedor: puerto 80
+  ──────────────────────────────────────────────────────
+  Configurado en docker-compose.yml con:   ports: "80:80"
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  PARTE 5: COMANDOS PARA USAR EL PROYECTO                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+CONSTRUIR Y LEVANTAR (primera vez):
+────────────────────────────────────
+
+  docker compose up --build
+
+  Esto hace en orden:
+  1. Lee el Dockerfile
+  2. Descarga la imagen de Node 22 Alpine (si no la tiene)
+  3. Instala las dependencias con npm ci
+  4. Ejecuta npm run build (genera el dist/)
+  5. Descarga la imagen de Nginx Alpine
+  6. Copia el dist/ al contenedor de Nginx
+  7. Inicia el contenedor
+  8. El sitio queda disponible en http://localhost
+
+LEVANTAR SIN RECONSTRUIR (cuando ya existe la imagen):
+────────────────────────────────────────────────────────
+
+  docker compose up -d
+
+  El "-d" significa "detached" (en segundo plano).
+  El contenedor corre aunque cierres la terminal.
+
+VER QUE CONTENEDORES ESTAN CORRIENDO:
+──────────────────────────────────────
+
+  docker ps
+
+  Muestra algo como:
+  CONTAINER ID   IMAGE              PORTS           NAMES
+  a3b4c5d6e7f8   visible-virgo...   0.0.0.0:80->80  visible-virgo-web
+
+VER LOS LOGS (mensajes de Nginx):
+────────────────────────────────────
+
+  docker compose logs -f
+
+  Cada vez que alguien pide el sitio, Nginx registra algo como:
+  172.17.0.1 - - [22/May/2026:10:30:00] "GET / HTTP/1.1" 200 15234
+  172.17.0.1 - - [22/May/2026:10:30:00] "GET /_astro/index.css" 200 4521
+  172.17.0.1 - - [22/May/2026:10:30:00] "GET /assets/logo.png" 200 18920
+
+  Formato: [IP del cliente] - [fecha] "peticion" [codigo de respuesta] [bytes]
+
+  Codigos de respuesta:
+    200 = OK, el archivo se encontro y se entrego
+    304 = Not Modified, el navegador ya lo tiene en cache, no se re-envia
+    404 = Not Found, el archivo no existe
+
+DETENER EL CONTENEDOR:
+────────────────────────
+
+  docker compose down
+
+DETENER Y ELIMINAR TODO (incluida la imagen):
+──────────────────────────────────────────────
+
+  docker compose down --rmi all
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  PARTE 6: DIFERENCIA ENTRE DESARROLLO Y PRODUCCION                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+  DESARROLLO (como trabajas en tu laptop):
+  ─────────────────────────────────────────
+    Comando: npm run dev
+    Puerto:  4321 (Astro dev server)
+    URL:     http://localhost:4321
+
+    El servidor de Astro:
+    - Recarga la pagina automaticamente cuando cambias codigo
+    - No comprime archivos (para ser mas rapido en desarrollo)
+    - Muestra errores detallados
+    - NO es eficiente para servir en internet
+
+  PRODUCCION (como lo despliega Docker con Nginx):
+  ──────────────────────────────────────────────────
+    Comando: docker compose up --build
+    Puerto:  80
+    URL:     http://localhost  (sin numero de puerto)
+
+    Nginx:
+    - Sirve archivos estaticos ya compilados (muy rapido)
+    - Comprime archivos con gzip
+    - Aplica politicas de cache
+    - Puede manejar miles de peticiones simultaneas
+    - ES la forma correcta de servir en internet
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  PARTE 7: RESUMEN EN UNA FRASE CADA COSA                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+  Astro          → Convierte tu codigo en HTML/CSS/JS puro (el build)
+  Docker         → Empaqueta todo en una caja que funciona en cualquier maquina
+  Dockerfile     → La receta para construir esa caja
+  docker-compose → El coordinador que levanta la caja con la configuracion correcta
+  Nginx          → El servidor web que recibe peticiones y entrega archivos
+  nginx.conf     → Las reglas que le dices a Nginx de como comportarse
+  dist/          → La carpeta con el sitio listo para servir
+  Puerto 80      → La "puerta" estandar de HTTP por donde entra el trafico web
+  Puerto 80:80   → El tunel entre tu maquina y el contenedor
+
+================================================================================
+   Creado para el proyecto Visible Virgo / Fundacion Nacer Para Vivir
+   Facturacion Electronica - Factus API
+================================================================================

@@ -1,0 +1,262 @@
+---
+import { Image } from 'astro:assets';
+import futuroImg from '../assets/futuro.png';
+
+const services = [
+	{
+		title: "Planes PIC",
+		desc: "Ejecución de Planes de Salud Pública e Intervenciones Colectivas PIC para fortalecer el bienestar territorial.",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-pulse"><path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3a1 1 0 0 0-1-1Z"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><path d="M9 14h2l1-2 1 2h2"/></svg>`
+	},
+	{
+		title: "Asesorías Técnicas",
+		desc: "Apoyo administrativo y técnico para la implementación de políticas públicas y proyectos de atención en salud.",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-cog"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M19 8v6"/><path d="M22 10h-6"/></svg>`
+	},
+	{
+		title: "Capacitación",
+		desc: "Formación especializada para líderes y organizaciones sociales en gestión de salud y participación comunitaria.",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M22 10v6M2 10l10-5 10 5-10 5L2 10Z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`
+	},
+	{
+		title: "Consultoría de Calidad",
+		desc: "Asesoría experta para la implementación de sistemas de calidad y estándares habilitadores en salud.",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>`
+	},
+	{
+		title: "Tecnologías en Salud",
+		desc: "Desarrollo de aplicaciones y software médico a medida para mejorar la gestión y atención del paciente.",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smartphone"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>`
+	}
+];
+---
+<section class="other-services">
+	<div class="container overflow-hidden">
+		<div class="section-header">
+			<h2 class="title">OTROS SERVICIOS</h2>
+			<div class="title-accent"></div>
+			<p class="subtitle">Complementamos nuestra atención con soluciones integrales para instituciones y comunidades.</p>
+		</div>
+		
+		<div class="services-grid">
+			{services.map((service, index) => (
+				<div class="apple-card" style={`--delay: ${index * 0.1}s`}>
+					<div class="window-header">
+						<div class="dots">
+							<span class="dot red"></span>
+							<span class="dot yellow"></span>
+							<span class="dot green"></span>
+						</div>
+					</div>
+					<div class="window-body">
+						<div class="service-icon" set:html={service.icon}></div>
+						<h3>{service.title}</h3>
+						<p>{service.desc}</p>
+					</div>
+				</div>
+			))}
+		</div>
+	</div>
+
+	<!-- Decoración Futuro -->
+	<div class="decoration-futuro">
+		<Image src={futuroImg} alt="Fundación Nacer Para Vivir - Futuro" width={220} format="webp" quality="mid" />
+	</div>
+</section>
+
+<style>
+	.other-services {
+		background-color: #004d1a !important;
+		background-image: radial-gradient(circle at top right, #006e2a 0%, #004d1a 60%) !important;
+		padding: 6rem 0 !important;
+		color: #ffffff !important;
+		position: relative;
+		overflow: hidden;
+		width: 100%;
+	}
+
+	.container {
+		max-width: 1280px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+		position: relative;
+		z-index: 2;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 3.5rem;
+		position: relative;
+		z-index: 3;
+	}
+
+	.title {
+		font-family: 'Plus Jakarta Sans', sans-serif !important;
+		font-size: 2.8rem !important;
+		font-weight: 800 !important;
+		color: #ffffff !important;
+		letter-spacing: -0.02em;
+		margin-bottom: 0.5rem;
+		text-transform: uppercase;
+	}
+
+	.title-accent {
+		width: 80px;
+		height: 4px;
+		background: #25D366;
+		margin: 0.5rem auto 1.5rem;
+		border-radius: 2px;
+	}
+
+	.subtitle {
+		color: rgba(255, 255, 255, 0.9) !important;
+		max-width: 650px;
+		margin: 0 auto;
+		font-size: 1.05rem;
+		line-height: 1.6;
+	}
+
+	.services-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 1.5rem;
+		position: relative;
+		z-index: 3;
+	}
+
+	@media (min-width: 1024px) {
+		.services-grid {
+			grid-template-columns: repeat(5, 1fr);
+		}
+	}
+
+	.apple-card {
+		background: rgba(255, 255, 255, 0.04);
+		border-radius: 1rem;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		opacity: 0;
+		animation: fadeInUp 0.6s ease forwards;
+		animation-delay: var(--delay);
+	}
+
+	.apple-card:hover {
+		transform: translateY(-8px);
+		background: rgba(255, 255, 255, 0.08);
+		border-color: rgba(255, 255, 255, 0.2);
+		box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.4);
+	}
+
+	.window-header {
+		background: rgba(255, 255, 255, 0.05);
+		padding: 0.5rem 0.75rem;
+		display: flex;
+		align-items: center;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	}
+
+	.dots {
+		display: flex;
+		gap: 6px;
+	}
+
+	.dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+	}
+
+	.red { background: #ff5f56; }
+	.yellow { background: #ffbd2e; }
+	.green { background: #27c93f; }
+
+	.window-body {
+		padding: 1.75rem 1.25rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		height: 100%;
+	}
+
+	.service-icon {
+		color: #25D366;
+		background: rgba(37, 211, 102, 0.12);
+		width: 3.5rem;
+		height: 3.5rem;
+		border-radius: 0.85rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 0.25rem;
+	}
+
+	.apple-card:hover .service-icon {
+		background: rgba(37, 211, 102, 0.25);
+		transform: scale(1.1);
+	}
+
+	.service-icon :global(svg) {
+		width: 1.75rem;
+		height: 1.75rem;
+	}
+
+	.window-body h3 {
+		font-family: 'Plus Jakarta Sans', sans-serif !important;
+		font-size: 1.1rem !important;
+		font-weight: 700 !important;
+		color: #ffffff !important;
+		margin: 0;
+		line-height: 1.3;
+		text-transform: none !important;
+	}
+
+	.window-body p {
+		font-size: 0.88rem;
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.7) !important;
+		margin: 0;
+	}
+
+	.decoration-futuro {
+		position: absolute;
+		bottom: -15px;
+		right: 20px;
+		z-index: 10; /* Enfrente de todo de forma sutil */
+		pointer-events: none;
+		opacity: 0.8;
+		filter: drop-shadow(0 0 15px rgba(0,0,0,0.3));
+		transition: transform 0.3s ease;
+	}
+
+	.decoration-futuro:hover {
+		transform: scale(1.05) rotate(-3deg);
+	}
+
+	@keyframes fadeInUp {
+		from { opacity: 0; transform: translateY(20px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+
+	@media (max-width: 1024px) {
+		.services-grid {
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		}
+		.decoration-futuro {
+			bottom: 10px;
+			right: 10px;
+			transform: scale(0.8);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.title { font-size: 2.2rem !important; }
+		.other-services { padding: 4rem 0 !important; }
+		.decoration-futuro { display: none; }
+	}
+</style>

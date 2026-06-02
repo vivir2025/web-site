@@ -1,24 +1,58 @@
-# build output
+# Build output
 dist/
 
-# generated types
+# Generated types and Astro cache
 .astro/
+.cache/
 
-# dependencies
+# Dependencies
 node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-# logs
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# OS specific
+.AppleDouble
+.LSOverride
+ehthumbs.db
+
+# IDE temp files
+.history/
+.vscode-settings.json
+
+# Development and testing
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.turbo/
 
-# environment variables
-.env
-.env.production
+# Claude Code and local tools
+.claude/
+.agent/
+.aider*
 
-# macOS-specific files
-.DS_Store
+# Compiled files
+*.tgz
+dist.tar.gz
 
-# jetbrains setting folder
-.idea/
+# Node
+.npm
+.eslintcache

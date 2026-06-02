@@ -1,0 +1,386 @@
+---
+import { Image } from 'astro:assets';
+import logoImg from '../assets/logo.png';
+
+interface Props {
+  dark?: boolean;
+}
+
+const { dark = false } = Astro.props;
+---
+<nav class={`navbar ${dark ? 'dark' : ''}`}>
+  <div class="container flex justify-between items-center py-6 px-inset">
+    <a href="/" class="logo">
+      <Image src={logoImg} alt="Fundación Nacer para Vivir" class="logo-img" width={220} format="webp" quality="mid" />
+    </a>
+
+    <button class="mobile-menu-toggle" aria-label="Abrir menú">
+      <span class="menu-icon">☰</span>
+    </button>
+
+    <div class="nav-links">
+      <a class="nav-link active" href="/">Inicio</a>
+      <a class="nav-link" href="#contacts">Contactos</a>
+      <a class="nav-link" href="/publico">Públicos</a>
+      <a class="nav-link" href="#novedades">Novedades</a>
+      <a class="nav-link" href="#">Acceso Personal</a>
+
+      <div class="social-icons">
+        <a href="https://www.facebook.com/share/18Xk1gfugG/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.791-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/fnpvips?igsh=MWozajY4Y3U1dGUwNA==" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.074 1.17.054 1.802.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.425.359 1.057.416 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.054 1.17-.249 1.802-.415 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.425.164-1.057.359-2.227.416-1.266.057-1.646.07-4.85.07s-3.585-.015-4.85-.074c-1.17-.054-1.802-.249-2.227-.415-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.425-.359-1.057-.416-2.227-.057-1.266-.07-1.646-.07-4.85s.015-3.585.074-4.85c.054-1.17.249-1.802.415-2.227.217-.562.477-.96.896-1.382.42-.419.819-.679 1.381-.896.425-.164 1.057-.359 2.227-.416 1.266-.057 1.646-.07 4.85-.07zM12 5.837a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://youtube.com/@fundacionnaceparavivir6256?si=nhG0sEzxOxhY_KG0" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <nav class="mobile-menu" id="mobile-menu">
+      <a href="/" class="mobile-nav-link">Inicio</a>
+      <a href="#contacts" class="mobile-nav-link">Contactos</a>
+      <a href="/publico" class="mobile-nav-link">Públicos</a>
+      <a href="#novedades" class="mobile-nav-link">Novedades</a>
+      <a href="#" class="mobile-nav-link">Acceso Personal</a>
+
+      <div class="mobile-social-icons">
+        <a href="https://www.facebook.com/share/18Xk1gfugG/" target="_blank" rel="noopener noreferrer" class="mobile-social-icon" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.791-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/fnpvips?igsh=MWozajY4Y3U1dGUwNA==" target="_blank" rel="noopener noreferrer" class="mobile-social-icon" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.074 1.17.054 1.802.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.425.359 1.057.416 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.054 1.17-.249 1.802-.415 2.227-.217.562-.477.96-.896 1.382-.42.419-.819.679-1.381.896-.425.164-1.057.359-2.227.416-1.266.057-1.646.07-4.85.07s-3.585-.015-4.85-.074c-1.17-.054-1.802-.249-2.227-.415-.562-.217-.96-.477-1.382-.896-.419-.42-.679-.819-.896-1.381-.164-.425-.359-1.057-.416-2.227-.057-1.266-.07-1.646-.07-4.85s.015-3.585.074-4.85c.054-1.17.249-1.802.415-2.227.217-.562.477-.96.896-1.382.42-.419.819-.679 1.381-.896.425-.164 1.057-.359 2.227-.416 1.266-.057 1.646-.07 4.85-.07zM12 5.837a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://youtube.com/@fundacionnaceparavivir6256?si=nhG0sEzxOxhY_KG0" target="_blank" rel="noopener noreferrer" class="mobile-social-icon" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+      </div>
+    </nav>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+    if (toggle && mobileMenu) {
+      toggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        toggle.classList.toggle('active');
+      });
+
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('open');
+          toggle.classList.remove('active');
+        });
+      });
+    }
+  });
+</script>
+
+<style>
+  .navbar {
+    position: absolute;
+    top: 1.5rem;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: transparent;
+  }
+
+  .navbar.dark {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(to right,
+      #1a4428 0%,
+      #2e8a4e 50%,
+      #39d36b 100%
+    );
+    padding: 1rem 0;
+  }
+
+  .logo {
+    font-family: var(--font-headline);
+    font-weight: 900;
+    font-size: 1.75rem;
+    letter-spacing: -0.04em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo-img {
+    height: 100px; /* Ajustá esto para que no sea muy grande */
+    width: auto;
+  }
+
+  .text-white { color: #fff; }
+  .text-dark { color: #000; }
+
+  .nav-links {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .nav-link {
+    font-family: var(--font-headline);
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    position: relative;
+  }
+
+  .nav-link:hover, .nav-link.active {
+    color: #ca8a04;
+    transform: translateY(-1px);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #ca8a04;
+    transition: width 0.3s ease;
+  }
+
+
+  .nav-link:hover::after, .nav-link.active::after {
+    width: 100%;
+    background: #ca8a04;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    margin-left: 1rem;
+    padding-left: 2rem;
+    border-left: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .social-icon {
+    color: #fff;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .social-icon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .social-icon:hover {
+    color: #ca8a04;
+    transform: translateY(-2px);
+  }
+
+  .btn-primary {
+    background: #000;
+    color: #fff;
+    padding: 0.85rem 1.75rem;
+    border-radius: 0.75rem;
+    font-family: var(--font-headline);
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+
+  .px-inset {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+
+  /* Mobile Menu Toggle Button */
+  .mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 101;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-toggle .menu-icon {
+    color: #fff;
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .mobile-menu-toggle:hover .menu-icon {
+    color: #ca8a04;
+    transform: scale(1.1);
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 100px;
+    left: 0;
+    right: 0;
+    background: transparent;
+    padding: 2rem;
+    max-height: 0;
+    overflow: hidden;
+    flex-direction: column;
+    gap: 1rem;
+    transition: max-height 0.3s ease;
+    z-index: 100;
+  }
+
+  /* Mobile menu with dark mode (other pages) */
+  .navbar.dark .mobile-menu {
+    background: linear-gradient(to right,
+      #1a4428 0%,
+      #2e8a4e 50%,
+      #39d36b 100%
+    );
+  }
+
+  .mobile-menu.open {
+    max-height: 600px;
+  }
+
+  .mobile-nav-link {
+    color: #fff;
+    font-family: var(--font-headline);
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    display: block;
+    padding: 0.75rem;
+    padding-bottom: 0.5rem;
+    transition: all 0.3s ease;
+    border-radius: 0.5rem;
+    position: relative;
+    border-bottom: 2px solid rgba(202, 138, 4, 0.2);
+  }
+
+  .mobile-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #ca8a04;
+    transition: width 0.3s ease;
+  }
+
+  .mobile-nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ca8a04;
+    padding-left: 1.25rem;
+    border-bottom-color: #ca8a04;
+  }
+
+  .mobile-nav-link:hover::after {
+    width: 100%;
+  }
+
+  .mobile-social-icons {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    justify-content: center;
+  }
+
+  .mobile-social-icon {
+    color: #fff;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-social-icon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .mobile-social-icon:hover {
+    color: #ca8a04;
+    transform: translateY(-2px);
+  }
+
+  /* Desktop Styles */
+  @media (min-width: 1025px) {
+    .mobile-menu-toggle {
+      display: none !important;
+    }
+
+    .mobile-menu {
+      display: none !important;
+    }
+
+    .nav-links {
+      display: flex;
+    }
+  }
+
+  /* Tablet and Mobile Styles */
+  @media (max-width: 1024px) {
+    .nav-links {
+      display: none;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+    }
+
+    .mobile-menu {
+      display: flex;
+    }
+
+    .px-inset {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .logo-img {
+      height: 80px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .px-inset {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .logo-img {
+      height: 60px;
+    }
+
+    .mobile-menu {
+      top: 80px;
+      padding: 1.5rem;
+    }
+
+    .mobile-menu-toggle .menu-icon {
+      font-size: 1.5rem;
+    }
+  }
+</style>

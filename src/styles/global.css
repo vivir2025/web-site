@@ -1,0 +1,83 @@
+:root {
+  /* Colors - EXACT Factus.com.co Palette */
+  --color-primary: #25D366; /* Factus Vibrant Green */
+  --color-primary-dark: #1ea952; 
+  --color-secondary: rgba(0, 0, 0, 0.6);
+  --color-brand-dark: #0a1f0f;
+  --color-accent: #FF9A00; /* Factus Orange */
+  --color-surface: #ffffff;
+  --color-on-surface: #111827; 
+  --color-surface-container-low: #f3f4f6; 
+  --color-surface-container-lowest: #ffffff;
+  --color-outline-variant: rgba(156, 163, 175, 0.2);
+  --color-dark-bg: #0D0F12; 
+
+  /* Typography */
+  --font-headline: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+  --font-label: 'Roboto', sans-serif;
+
+  /* Spacing */
+  --spacing-4: 1rem;
+  --spacing-10: 2.5rem;
+  --spacing-16: 4rem;
+  --spacing-24: 6rem;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(20px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.label {
+  font-family: var(--font-label);
+}
+
+/* Utilities */
+.container {
+  max-width: 80rem; /* 1280px */
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.flex { display: flex; }
+.justify-start { justify-content: flex-start; }
+.justify-between { justify-content: space-between; }
+.items-center { align-items: center; }
+.gap-20 { gap: 5rem; }
+.gap-10 { gap: 2.5rem; }
+.gap-4 { gap: 1rem; }
+
+.gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+/* Section Spacing */
+section {
+  padding: var(--spacing-24) 0;
+}
