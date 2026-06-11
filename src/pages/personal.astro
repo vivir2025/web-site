@@ -97,9 +97,13 @@ import Footer from "../components/Footer.astro";
 
 <script>
   const API_BASE = import.meta.env.PUBLIC_API_BASE;
+  const MAX_INTENTOS = 3;
+  const BLOQUEO_MS = 15 * 60 * 1000; // 15 minutos
+  const KEY_INTENTOS = 'fnpv_intentos';
+  const KEY_BLOQUEO = 'fnpv_bloqueo_hasta';
 
   // Si ya tiene sesión, redirigir directo
-  if (typeof window !== 'undefined' && localStorage.getItem('fnpv_token')) {
+  if (localStorage.getItem('fnpv_token')) {
     window.location.href = '/documentos-internos';
   }
 
@@ -110,9 +114,86 @@ import Footer from "../components/Footer.astro";
   const btnSpinner = btnLogin.querySelector('.btn-spinner') as HTMLSpanElement;
   const togglePassword = document.getElementById('toggle-password') as HTMLButtonElement;
   const passwordInput = document.getElementById('contrasena') as HTMLInputElement;
+  const usuarioInput = document.getElementById('usuario') as HTMLInputElement;
   const eyeShow = togglePassword.querySelector('.eye-show') as SVGElement;
   const eyeHide = togglePassword.querySelector('.eye-hide') as SVGElement;
 
+  let countdownInterval: ReturnType<typeof setInterval> | null = null;
+
+  // — Helpers de rate limiting —
+  function getIntentos(): number {
+    return parseInt(localStorage.getItem(KEY_INTENTOS) || '0', 10);
+  }
+
+  function getBloqueoHasta(): number {
+    return parseInt(localStorage.getItem(KEY_BLOQUEO) || '0', 10);
+  }
+
+  function estaBlockeado(): boolean {
+    const hasta = getBloqueoHasta();
+    if (hasta && Date.now() < hasta) return true;
+    // Si el bloqueo ya expiró, limpiar
+    if (hasta && Date.now() >= hasta) {
+      localStorage.removeItem(KEY_INTENTOS);
+      localStorage.removeItem(KEY_BLOQUEO);
+    }
+    return false;
+  }
+
+  function registrarIntentoFallido() {
+    const intentos = getIntentos() + 1;
+    localStorage.setItem(KEY_INTENTOS, String(intentos));
+    if (intentos >= MAX_INTENTOS) {
+      localStorage.setItem(KEY_BLOQUEO, String(Date.now() + BLOQUEO_MS));
+    }
+    return intentos;
+  }
+
+  function bloquearFormulario() {
+    usuarioInput.disabled = true;
+    passwordInput.disabled = true;
+    togglePassword.disabled = true;
+    btnLogin.disabled = true;
+    form.classList.add('form-blocked');
+    iniciarCountdown();
+  }
+
+  function desbloquearFormulario() {
+    usuarioInput.disabled = false;
+    passwordInput.disabled = false;
+    togglePassword.disabled = false;
+    btnLogin.disabled = false;
+    form.classList.remove('form-blocked');
+    errorMsg.classList.remove('visible', 'error-block');
+    errorMsg.textContent = '';
+    if (countdownInterval) clearInterval(countdownInterval);
+  }
+
+  function iniciarCountdown() {
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownInterval = setInterval(() => {
+      const hasta = getBloqueoHasta();
+      const restante = hasta - Date.now();
+      if (restante <= 0) {
+        clearInterval(countdownInterval!);
+        desbloquearFormulario();
+        return;
+      }
+      const mins = Math.floor(restante / 60000);
+      const segs = Math.floor((restante % 60000) / 1000);
+      const tiempoStr = mins > 0
+        ? `${mins}m ${String(segs).padStart(2, '0')}s`
+        : `${segs}s`;
+      showError(`Demasiados intentos fallidos. Podés intentarlo nuevamente en ${tiempoStr}.`, true);
+    }, 1000);
+  }
+
+  // Verificar estado de bloqueo al cargar
+  if (estaBlockeado()) {
+    bloquearFormulario();
+  }
+
+  // — Toggle contraseña —
   togglePassword.addEventListener('click', () => {
     const isHidden = passwordInput.type === 'password';
     passwordInput.type = isHidden ? 'text' : 'password';
@@ -120,13 +201,20 @@ import Footer from "../components/Footer.astro";
     eyeHide.style.display = isHidden ? '' : 'none';
   });
 
+  // — Submit —
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    errorMsg.textContent = '';
-    errorMsg.classList.remove('visible');
 
-    const usuario = (document.getElementById('usuario') as HTMLInputElement).value.trim();
-    const contrasena = (document.getElementById('contrasena') as HTMLInputElement).value;
+    if (estaBlockeado()) {
+      bloquearFormulario();
+      return;
+    }
+
+    errorMsg.classList.remove('visible', 'error-block');
+    errorMsg.textContent = '';
+
+    const usuario = usuarioInput.value.trim();
+    const contrasena = passwordInput.value;
 
     if (!usuario || !contrasena) {
       showError('Completá todos los campos.');
@@ -145,14 +233,25 @@ import Footer from "../components/Footer.astro";
       const data = await res.json();
 
       if (!res.ok || data.error) {
-        showError(data.message || data.error || 'Credenciales incorrectas. Intentá de nuevo.');
+        const intentos = registrarIntentoFallido();
+
+        if (intentos >= MAX_INTENTOS) {
+          bloquearFormulario();
+        } else {
+          const restantes = MAX_INTENTOS - intentos;
+          showError(
+            `Credenciales incorrectas. Te ${restantes === 1 ? 'queda' : 'quedan'} ${restantes} intento${restantes === 1 ? '' : 's'}.`
+          );
+        }
         return;
       }
 
-      // Guardar token y nombre en localStorage
+      // Login exitoso — limpiar contadores
+      localStorage.removeItem(KEY_INTENTOS);
+      localStorage.removeItem(KEY_BLOQUEO);
+
       localStorage.setItem('fnpv_token', data.token || data.access_token || 'authenticated');
 
-      // Extraer nombre soportando respuestas planas y anidadas (data.user.nombre, etc.)
       const userObj = data.user || data.data || data;
       const rawNombre =
         userObj?.nombre || userObj?.name || userObj?.usuario ||
@@ -171,13 +270,15 @@ import Footer from "../components/Footer.astro";
     }
   });
 
-  function showError(msg: string) {
+  function showError(msg: string, isBlock = false) {
     errorMsg.textContent = msg;
     errorMsg.classList.add('visible');
+    if (isBlock) errorMsg.classList.add('error-block');
+    else errorMsg.classList.remove('error-block');
   }
 
   function setLoading(loading: boolean) {
-    btnLogin.disabled = loading;
+    btnLogin.disabled = loading || estaBlockeado();
     btnText.style.display = loading ? 'none' : '';
     btnSpinner.style.display = loading ? '' : 'none';
   }
@@ -438,6 +539,28 @@ import Footer from "../components/Footer.astro";
     bottom: 30%;
     right: 10%;
     opacity: 0.08;
+  }
+
+  /* Estado bloqueado */
+  .form-blocked .field-input {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+
+  .form-blocked .btn-login {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .error-msg.error-block {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.45);
+    color: #fca5a5;
+    font-weight: 500;
   }
 
   @media (max-width: 640px) {
