@@ -19,9 +19,9 @@ import alimentariaImg from '../assets/alimentaria.png';
 				<div class="card-body">
 					<h3>Gestion Cardiorenal</h3>
 					<p>La prevención de la enfermedad, el mejoramiento de las condiciones de salud basadas en el autocuidado.</p>
-					<a href="#" class="learn-more">
+					<button type="button" class="learn-more btn-restricted">
 						Saber más <span class="material-symbols-outlined">arrow_forward</span>
-					</a>
+					</button>
 				</div>
 			</div>
 
@@ -32,9 +32,9 @@ import alimentariaImg from '../assets/alimentaria.png';
 				<div class="card-body">
 					<h3>Atención Primaria en Salud</h3>
 					<p>La Atención Primaria de Salud (APS) es considerada como uno de los componentes fundamentales de un sistema de salud efectivo.</p>
-					<a href="#" class="learn-more">
+					<button type="button" class="learn-more btn-restricted">
 						Saber más <span class="material-symbols-outlined">arrow_forward</span>
-					</a>
+					</button>
 				</div>
 			</div>
 
@@ -45,9 +45,9 @@ import alimentariaImg from '../assets/alimentaria.png';
 				<div class="card-body">
 					<h3>Empoderamiento Comunitario</h3>
 					<p>teniendo en cuenta nuestro origen y nuestro modelo de atención la gestión comunitaria es la base de operación de nuestro programa.</p>
-					<a href="#" class="learn-more">
+					<button type="button" class="learn-more btn-restricted">
 						Saber más <span class="material-symbols-outlined">arrow_forward</span>
-					</a>
+					</button>
 				</div>
 			</div>
 
@@ -58,9 +58,9 @@ import alimentariaImg from '../assets/alimentaria.png';
 				<div class="card-body">
 					<h3>Seguirdad Alimentaria</h3>
 					<p>Conocedores de que una alimentación suficiente y nutritiva es condición indispensable para una vida sana.</p>
-					<a href="#" class="learn-more">
+					<button type="button" class="learn-more btn-restricted">
 						Saber más <span class="material-symbols-outlined">arrow_forward</span>
-					</a>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -197,4 +197,64 @@ import alimentariaImg from '../assets/alimentaria.png';
 		.learn-more { align-self: center; }
 		.icon-wrapper { margin: 0 auto; }
 	}
+
+	.learn-more.btn-restricted {
+		cursor: not-allowed;
+		background: #2e8a4e;
+	}
 </style>
+
+<script>
+	let toastTimeout: ReturnType<typeof setTimeout> | null = null;
+
+	function showRestrictedToast() {
+		let toast = document.getElementById('restricted-toast');
+		if (!toast) {
+			// Crear el toast si no existe en esta página
+			toast = document.createElement('div');
+			toast.id = 'restricted-toast';
+			toast.setAttribute('role', 'alert');
+			toast.innerHTML = `
+				<span class="toast-icon">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+					</svg>
+				</span>
+				<div class="toast-body">
+					<strong>No permitido</strong>
+					<span>Solo uso corporativo</span>
+				</div>
+			`;
+			Object.assign(toast.style, {
+				position: 'fixed', bottom: '2rem', left: '50%',
+				transform: 'translateX(-50%) translateY(6rem)',
+				background: '#1a1a2e',
+				border: '1px solid rgba(239,68,68,0.4)',
+				borderLeft: '4px solid #ef4444',
+				borderRadius: '0.875rem',
+				padding: '0.875rem 1.25rem',
+				display: 'flex', alignItems: 'center', gap: '0.875rem',
+				zIndex: '9999', opacity: '0',
+				transition: 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease',
+				boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+				minWidth: '260px', pointerEvents: 'none',
+				fontFamily: 'inherit', color: '#fff'
+			});
+			document.body.appendChild(toast);
+		}
+
+		toast.style.transform = 'translateX(-50%) translateY(0)';
+		toast.style.opacity = '1';
+		if (toastTimeout) clearTimeout(toastTimeout);
+		toastTimeout = setTimeout(() => {
+			if (toast) {
+				toast.style.transform = 'translateX(-50%) translateY(6rem)';
+				toast.style.opacity = '0';
+			}
+		}, 3000);
+	}
+
+	document.querySelectorAll('.btn-restricted').forEach(btn => {
+		btn.addEventListener('click', showRestrictedToast);
+	});
+</script>

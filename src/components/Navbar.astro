@@ -19,11 +19,11 @@ const { dark = false } = Astro.props;
     </button>
 
     <div class="nav-links">
-      <a class="nav-link active" href="/">Inicio</a>
-      <a class="nav-link" href="/#contacts">Contactos</a>
-      <a class="nav-link" href="/publico">Públicos</a>
-      <a class="nav-link" href="/#novedades">Novedades</a>
-      <a class="nav-link" href="/personal">Acceso Personal</a>
+      <a class="nav-link active nav-public" href="/">Inicio</a>
+      <a class="nav-link nav-public" href="/#contacts">Contactos</a>
+      <a class="nav-link nav-public" href="/publico">Públicos</a>
+      <a class="nav-link nav-public" href="/#novedades">Novedades</a>
+      <a class="nav-link nav-auth-link" href="/personal" id="nav-acceso">Acceso Personal</a>
 
       <div class="social-icons">
         <a href="https://www.facebook.com/share/18Xk1gfugG/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook">
@@ -39,11 +39,11 @@ const { dark = false } = Astro.props;
     </div>
 
     <nav class="mobile-menu" id="mobile-menu">
-      <a href="/" class="mobile-nav-link">Inicio</a>
-      <a href="/#contacts" class="mobile-nav-link">Contactos</a>
-      <a href="/publico" class="mobile-nav-link">Públicos</a>
-      <a href="/#novedades" class="mobile-nav-link">Novedades</a>
-      <a href="/personal" class="mobile-nav-link">Acceso Personal</a>
+      <a href="/" class="mobile-nav-link nav-public">Inicio</a>
+      <a href="/#contacts" class="mobile-nav-link nav-public">Contactos</a>
+      <a href="/publico" class="mobile-nav-link nav-public">Públicos</a>
+      <a href="/#novedades" class="mobile-nav-link nav-public">Novedades</a>
+      <a href="/personal" class="mobile-nav-link nav-auth-link" id="mobile-nav-acceso">Acceso Personal</a>
 
       <div class="mobile-social-icons">
         <a href="https://www.facebook.com/share/18Xk1gfugG/" target="_blank" rel="noopener noreferrer" class="mobile-social-icon" aria-label="Facebook">
@@ -66,17 +66,39 @@ const { dark = false } = Astro.props;
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
+    // — Mobile toggle —
     if (toggle && mobileMenu) {
       toggle.addEventListener('click', () => {
         mobileMenu.classList.toggle('open');
         toggle.classList.toggle('active');
       });
-
       mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
           mobileMenu.classList.remove('open');
           toggle.classList.remove('active');
         });
+      });
+    }
+
+    // — Bloqueo de nav según sesión —
+    const isLoggedIn = !!localStorage.getItem('fnpv_token');
+
+    const publicLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-public');
+    const authLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-auth-link');
+
+    if (isLoggedIn) {
+      // Bloquear links públicos
+      publicLinks.forEach(link => {
+        link.classList.add('nav-blocked');
+        link.addEventListener('click', e => e.preventDefault());
+        link.setAttribute('aria-disabled', 'true');
+        link.setAttribute('tabindex', '-1');
+      });
+
+      // Cambiar "Acceso Personal" por "Documentos Internos"
+      authLinks.forEach(link => {
+        link.textContent = 'Documentos Internos';
+        link.setAttribute('href', '/documentos-internos');
       });
     }
   });
@@ -141,6 +163,19 @@ const { dark = false } = Astro.props;
   .nav-link:hover, .nav-link.active {
     color: #ca8a04;
     transform: translateY(-1px);
+  }
+
+  .nav-link.nav-blocked,
+  .mobile-nav-link.nav-blocked {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .nav-link.nav-blocked:hover,
+  .mobile-nav-link.nav-blocked:hover {
+    color: #fff;
+    transform: none;
   }
 
   .nav-link::after {

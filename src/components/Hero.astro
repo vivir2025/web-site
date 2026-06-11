@@ -31,7 +31,7 @@ const slides = [
 				<div class="flex-row gap-4 flex-wrap">
 					<a href="/ecosistema-digital" class="btn-lg btn-light">Ecosistema Digital</a>
 					<button class="btn-lg btn-brand">Escribenos</button>
-					<a href="https://fnpvi.nacerparavivir.org/docs" target="_blank" class="btn-lg btn-accent">Documentación</a>
+					<button class="btn-lg btn-accent btn-restricted" type="button">Documentación</button>
 				</div>
 			</div>
 
@@ -417,6 +417,71 @@ const slides = [
 	.method { color: #3E3CFF; font-weight: bold; }
 	.key { color: var(--color-primary); }
 
+	/* Toast restringido */
+	.restricted-toast {
+		position: fixed;
+		bottom: 2rem;
+		left: 50%;
+		transform: translateX(-50%) translateY(6rem);
+		background: #1a1a2e;
+		border: 1px solid rgba(239, 68, 68, 0.4);
+		border-left: 4px solid #ef4444;
+		border-radius: 0.875rem;
+		padding: 0.875rem 1.25rem;
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+		z-index: 9999;
+		opacity: 0;
+		transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+		min-width: 260px;
+		pointer-events: none;
+	}
+
+	.restricted-toast.show {
+		transform: translateX(-50%) translateY(0);
+		opacity: 1;
+	}
+
+	.toast-icon {
+		width: 2rem;
+		height: 2rem;
+		background: rgba(239, 68, 68, 0.15);
+		border-radius: 0.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		color: #f87171;
+	}
+
+	.toast-icon svg {
+		width: 1.1rem;
+		height: 1.1rem;
+	}
+
+	.toast-body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
+	}
+
+	.toast-body strong {
+		font-family: var(--font-headline);
+		font-size: 0.875rem;
+		font-weight: 700;
+		color: #f87171;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+	}
+
+	.toast-body span {
+		font-family: var(--font-body);
+		font-size: 0.8rem;
+		color: rgba(255,255,255,0.6);
+	}
+
 	.status-overlay {
 		background: var(--color-primary);
 		color: #000;
@@ -436,6 +501,19 @@ const slides = [
 		z-index: 10;
 	}
 </style>
+
+<!-- Toast de acceso restringido -->
+<div id="restricted-toast" class="restricted-toast" role="alert" aria-live="assertive">
+  <span class="toast-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+    </svg>
+  </span>
+  <div class="toast-body">
+    <strong>No permitido</strong>
+    <span>Solo uso corporativo</span>
+  </div>
+</div>
 
 <script>
 	const slides = [
@@ -515,4 +593,17 @@ const slides = [
 	if (typewriterElement) {
 		type();
 	}
+
+	// Botones restringidos — solo uso corporativo
+	let toastTimeout: ReturnType<typeof setTimeout> | null = null;
+	const toast = document.getElementById('restricted-toast');
+
+	document.querySelectorAll('.btn-restricted').forEach(btn => {
+		btn.addEventListener('click', () => {
+			if (!toast) return;
+			toast.classList.add('show');
+			if (toastTimeout) clearTimeout(toastTimeout);
+			toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+		});
+	});
 </script>
