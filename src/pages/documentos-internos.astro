@@ -99,6 +99,31 @@ import Footer from "../components/Footer.astro";
               </div>
             </a>
 
+            <!-- Carpeta 3: Protocolos y procedimientos institucionales -->
+            <a
+              href="#"
+              id="folder-protocolos"
+              class="folder-card"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-url-key="protocolos"
+            >
+              <div class="folder-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.5 21a3 3 0 003-3v-4.5a3 3 0 00-3-3h-15a3 3 0 00-3 3V18a3 3 0 003 3h15zM1.5 10.146V6a3 3 0 013-3h5.379a2.25 2.25 0 011.59.659l2.122 2.121c.14.141.331.22.53.22H19.5a3 3 0 013 3v1.146A4.483 4.483 0 0019.5 9h-15a4.483 4.483 0 00-3 1.146z"/>
+                </svg>
+              </div>
+              <div class="folder-info">
+                <span class="folder-name">Protocolos y procedimientos institucionales</span>
+                <span class="folder-meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                  </svg>
+                  Abrir documento
+                </span>
+              </div>
+            </a>
+
           </div>
         </div>
 
@@ -123,6 +148,7 @@ import Footer from "../components/Footer.astro";
   const DOC_URLS: Record<string, string> = {
     comunicado: 'https://drive.google.com/file/d/1UfdaXPnI-3KUECAe0Atw64yRc762xwil/preview',
     reglamento: 'https://drive.google.com/file/d/15Xny8B_Fp7_Frha3kkZeESpOgheNY6kq/preview',
+    protocolos: 'https://nacerparavivir-my.sharepoint.com/:f:/g/personal/rips_nacerparavivir_onmicrosoft_com/IgBCWWGgNvpVTY33cgrrekISAX0KsiZKePaW_n9VCoS-Yh8?e=ADqQK9',
   };
 
   const docsPage = document.getElementById('docs-page') as HTMLElement;
@@ -144,9 +170,11 @@ import Footer from "../components/Footer.astro";
     // Asignar URLs a las carpetas
     const folderComunicado = document.getElementById('folder-comunicado') as HTMLAnchorElement;
     const folderReglamento = document.getElementById('folder-reglamento') as HTMLAnchorElement;
+    const folderProtocolos = document.getElementById('folder-protocolos') as HTMLAnchorElement;
 
     folderComunicado.href = DOC_URLS.comunicado;
     folderReglamento.href = DOC_URLS.reglamento;
+    folderProtocolos.href = DOC_URLS.protocolos;
   }
 
   // Cerrar sesión
